@@ -4,4 +4,4 @@
 ### Настройка среды
 Работаю обычно в VS / VS code, для разработки на linux использую VS code. Для работы в связке VS Code -> WSL -> Docker использую расширение  `Dev Containers`.
 
-Разграничил Dockerfile и compose.yaml. Отладка работает.
+Разграничил Dockerfile и compose.yaml. Отладка работает. Зависимости такие- cmake 4.4.0, g++ 14.2.0, Ninja 1.13.2, Vcpkg(установлен)
