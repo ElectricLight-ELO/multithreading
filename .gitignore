@@ -9,5 +9,9 @@
 !/CMakeLists.txt
 !/CMakePresets.json
 !/compose.yaml
+!/Dockerfile
+!/.devcontainer/
+!/.vscode/
 !/readme.md
+!/README.md
 !/vcpkg.json

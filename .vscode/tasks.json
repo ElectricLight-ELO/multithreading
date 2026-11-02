@@ -1,0 +1,68 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cmake: configure",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "-S", ".",
+        "-B", "build",
+        "-G", "Ninja Multi-Config",
+        "-DCMAKE_CXX_STANDARD=20",
+        "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+        "-DCMAKE_CONFIGURATION_TYPES=Debug;Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+): (?:fatal )?error: (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      }
+    },
+    {
+      "label": "cmake: build Debug",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Debug"],
+      "dependsOn": "cmake: configure",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "cmake: build Debug tests",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Debug", "--target", "tests"],
+      "dependsOn": "cmake: configure",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "cmake: build Release",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Release"],
+      "dependsOn": "cmake: configure",
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}
