@@ -9,7 +9,7 @@ ENV PATH="/opt/cmake/bin:${VCPKG_ROOT}:${PATH}"
 
 RUN sed -i 's|deb.debian.org|mirror.yandex.ru|g' /etc/apt/sources.list.d/debian.sources \
  && apt-get update \
- && apt-get install -y --no-install-recommends g++ make git curl zip unzip pkg-config ca-certificates xz-utils gdb \
+ && apt-get install -y --no-install-recommends g++ make git curl zip unzip pkg-config ca-certificates xz-utils gdb libbenchmark-dev \
  && rm -rf /var/lib/apt/lists/*
 
  RUN curl -sSLfo /tmp/cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v4.4.0/cmake-4.4.0-linux-x86_64.tar.gz \

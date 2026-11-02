@@ -11,6 +11,7 @@
         "-G", "Ninja Multi-Config",
         "-DCMAKE_CXX_STANDARD=20",
         "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+        "-DCMAKE_TOOLCHAIN_FILE=",
         "-DCMAKE_CONFIGURATION_TYPES=Debug;Release",
         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
       ],
@@ -52,6 +53,65 @@
       "options": {
         "cwd": "${workspaceFolder}"
       }
+    },
+    {
+      "label": "cmake: run Debug tests",
+      "type": "process",
+      "command": "${workspaceFolder}/build/src/tests/Debug/tests",
+      "dependsOn": "cmake: build Debug tests",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build Release tests",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Release", "--target", "tests"],
+      "dependsOn": "cmake: configure",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "cmake: run Release tests",
+      "type": "process",
+      "command": "${workspaceFolder}/build/src/tests/Release/tests",
+      "dependsOn": "cmake: build Release tests",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build Debug benchmarks",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Debug", "--target", "benchmarks"],
+      "dependsOn": "cmake: configure",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "cmake: run Debug benchmarks",
+      "type": "process",
+      "command": "${workspaceFolder}/build/src/benchmarks/Debug/benchmarks",
+      "dependsOn": "cmake: build Debug benchmarks",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build Release benchmarks",
+      "type": "process",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Release", "--target", "benchmarks"],
+      "dependsOn": "cmake: configure",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "cmake: run Release benchmarks",
+      "type": "process",
+      "command": "${workspaceFolder}/build/src/benchmarks/Release/benchmarks",
+      "dependsOn": "cmake: build Release benchmarks",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
     },
     {
       "label": "cmake: build Release",

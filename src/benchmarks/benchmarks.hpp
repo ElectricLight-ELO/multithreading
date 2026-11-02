@@ -1,6 +1,7 @@
 #pragma once
 #include <benchmark/benchmark.h>
 #include <chrono>
+#include <functional>
 #include <span>
 #include <string_view>
 #include <thread>

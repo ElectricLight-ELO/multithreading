@@ -63,19 +63,34 @@ public:
   /// Called on one thread. Must call `print` once per message.
   void run(std::stop_token stop) {
     std::queue<Message> local_queue;
-    
+    std::unique_lock lock_uni(mutex_);
     // цикл обработки сообщений
+    while(true){
+      
+      cv_.wait(lock_uni, stop, [this] {  // ожидание пока нет сигнала stop или очередь не пуста
+            return !message_queue.empty();
+        });
 
-    std::unique_lock lock_th(mutex_);
-    lock_th.lock();
+        if(message_queue.empty() && stop.stop_requested()){
+          lock_uni.unlock();
+          return;  
+        }
 
-    while (!message_queue.empty() && !stop.stop_requested()) {
+        std::swap(local_queue, message_queue);
+        lock_uni.unlock();
 
+        while(!local_queue.empty()){
+          Message msg_temp = local_queue.front();
+          local_queue.pop();
 
-    } 
-
-
-   // std::string_view view{msg.data.data(), msg.size};
+            std::string_view view{msg_temp.data.data(), msg_temp.size};
+            print(view);
+        }
+    }
+   // std::string_view view{msg_temp.data.data(), msg_temp.size};
    // print(view);  
+   lock_uni.unlock();
   }
+
+  
 };
