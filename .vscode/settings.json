@@ -1,14 +1,7 @@
 {
   "C_Cpp.default.compilerPath": "/usr/bin/g++",
   "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
-  "cmake.buildDirectory": "${workspaceFolder}/build",
-  "cmake.configureOnOpen": false,
-  "cmake.generator": "Ninja Multi-Config",
-  "cmake.useCMakePresets": "never",
-  "cmake.configureSettings": {
-    "CMAKE_CXX_STANDARD": "20",
-    "CMAKE_CXX_STANDARD_REQUIRED": true,
-    "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
-    "CMAKE_EXPORT_COMPILE_COMMANDS": true
-  }
+  "C_Cpp.default.includePath": ["${workspaceFolder}/src"],
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": false
 }

@@ -28,15 +28,12 @@ public:
     
     Message msg;
     if(message.size() > msg.data.size()){
-    //  throw std::runtime_error("Message too long");
-      return; // сообщение слишком длинное, игнорируем
+      throw std::runtime_error("Message too long");
     }
 
     msg.size = static_cast<std::uint16_t>(message.size());  // создание копии
    if(!message.empty()) {
         std::memcpy(msg.data.data(), message.data(), message.size()); // Копирование в структуру Message
-    } else {
-        msg.size = 0;
     }
 
   {
@@ -80,11 +77,11 @@ public:
 
         // выводим каждое сообщение из локальной очереди
       while (!local_queue.empty()) {
-        Message msg_temp = local_queue.front();
-        local_queue.pop();
+        const Message& msg_temp = local_queue.front();
+        
 
-        std::string_view view{ msg_temp.data.data(), msg_temp.size };
-        print(view);
+        print(std::string_view { msg_temp.data.data(), msg_temp.size } );
+        local_queue.pop();
       }
     }
   }

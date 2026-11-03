@@ -1,128 +1,181 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "cmake: configure",
-      "type": "process",
-      "command": "cmake",
-      "args": [
-        "-S", ".",
-        "-B", "build",
-        "-G", "Ninja Multi-Config",
-        "-DCMAKE_CXX_STANDARD=20",
-        "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
-        "-DCMAKE_TOOLCHAIN_FILE=",
-        "-DCMAKE_CONFIGURATION_TYPES=Debug;Release",
-        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": {
-        "owner": "cpp",
-        "fileLocation": ["relative", "${workspaceFolder}"],
-        "pattern": {
-          "regexp": "^(.*):(\\d+):(\\d+): (?:fatal )?error: (.*)$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "message": 4
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake: configure",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--preset",
+                "default"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: build Debug",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "debug"
+            ],
+            "dependsOn": "cmake: configure",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: build Debug tests",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "debug",
+                "--target",
+                "tests"
+            ],
+            "dependsOn": "cmake: configure",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: run Debug",
+            "type": "process",
+            "command": "${workspaceFolder}/build/Debug/main",
+            "dependsOn": "cmake: build Debug",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: run Debug tests",
+            "type": "process",
+            "command": "${workspaceFolder}/build/src/tests/Debug/tests",
+            "dependsOn": "cmake: build Debug tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: build Release tests",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "release",
+                "--target",
+                "tests"
+            ],
+            "dependsOn": "cmake: configure",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: run Release tests",
+            "type": "process",
+            "command": "${workspaceFolder}/build/src/tests/Release/tests",
+            "dependsOn": "cmake: build Release tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: build Debug benchmarks",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "debug",
+                "--target",
+                "benchmarks"
+            ],
+            "dependsOn": "cmake: configure",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: run Debug benchmarks",
+            "type": "process",
+            "command": "${workspaceFolder}/build/src/benchmarks/Debug/benchmarks",
+            "dependsOn": "cmake: build Debug benchmarks",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: build Release benchmarks",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "release",
+                "--target",
+                "benchmarks"
+            ],
+            "dependsOn": "cmake: configure",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: run Release benchmarks",
+            "type": "process",
+            "command": "${workspaceFolder}/build/src/benchmarks/Release/benchmarks",
+            "dependsOn": "cmake: build Release benchmarks",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake: build Release",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "release"
+            ],
+            "dependsOn": "cmake: configure",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "cmake: run Release",
+            "type": "process",
+            "command": "${workspaceFolder}/build/Release/main",
+            "dependsOn": "cmake: build Release",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
-      }
-    },
-    {
-      "label": "cmake: build Debug",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Debug"],
-      "dependsOn": "cmake: configure",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "options": {
-        "cwd": "${workspaceFolder}"
-      }
-    },
-    {
-      "label": "cmake: build Debug tests",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Debug", "--target", "tests"],
-      "dependsOn": "cmake: configure",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      }
-    },
-    {
-      "label": "cmake: run Debug tests",
-      "type": "process",
-      "command": "${workspaceFolder}/build/src/tests/Debug/tests",
-      "dependsOn": "cmake: build Debug tests",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": []
-    },
-    {
-      "label": "cmake: build Release tests",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Release", "--target", "tests"],
-      "dependsOn": "cmake: configure",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": "$gcc"
-    },
-    {
-      "label": "cmake: run Release tests",
-      "type": "process",
-      "command": "${workspaceFolder}/build/src/tests/Release/tests",
-      "dependsOn": "cmake: build Release tests",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": []
-    },
-    {
-      "label": "cmake: build Debug benchmarks",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Debug", "--target", "benchmarks"],
-      "dependsOn": "cmake: configure",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": "$gcc"
-    },
-    {
-      "label": "cmake: run Debug benchmarks",
-      "type": "process",
-      "command": "${workspaceFolder}/build/src/benchmarks/Debug/benchmarks",
-      "dependsOn": "cmake: build Debug benchmarks",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": []
-    },
-    {
-      "label": "cmake: build Release benchmarks",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Release", "--target", "benchmarks"],
-      "dependsOn": "cmake: configure",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": "$gcc"
-    },
-    {
-      "label": "cmake: run Release benchmarks",
-      "type": "process",
-      "command": "${workspaceFolder}/build/src/benchmarks/Release/benchmarks",
-      "dependsOn": "cmake: build Release benchmarks",
-      "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": []
-    },
-    {
-      "label": "cmake: build Release",
-      "type": "process",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Release"],
-      "dependsOn": "cmake: configure",
-      "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      }
-    }
-  ]
+    ]
 }
