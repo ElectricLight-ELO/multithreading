@@ -11,8 +11,6 @@ struct Message {
     std::uint16_t size;
 };
 
-
-
 extern void (*print)(std::string_view message);
 
 
@@ -26,13 +24,12 @@ public:
   /// Called on many threads. Must queue the message.
   /// Should return as soon as possible and rarely block.
   void post(std::string_view message) {
-    std::lock_guard<std::mutex> lock(mutex_);
 
     
     Message msg;
     if(message.size() > msg.data.size()){
-      throw std::runtime_error("Message too long");
-   //   return; // сообщение слишком длинное, игнорируем
+    //  throw std::runtime_error("Message too long");
+      return; // сообщение слишком длинное, игнорируем
     }
 
     msg.size = static_cast<std::uint16_t>(message.size());  // создание копии
@@ -63,33 +60,33 @@ public:
   /// Called on one thread. Must call `print` once per message.
   void run(std::stop_token stop) {
     std::queue<Message> local_queue;
-    std::unique_lock lock_uni(mutex_);
-    // цикл обработки сообщений
-    while(true){
-      
-      cv_.wait(lock_uni, stop, [this] {  // ожидание пока нет сигнала stop или очередь не пуста
-            return !message_queue.empty();
+    while (true) {
+      {
+        std::unique_lock lock_uni(mutex_);
+        cv_.wait(lock_uni, stop, [this] {  // ожидание пока нет сигнала stop или очередь не пуста
+          return !message_queue.empty();
         });
 
-        if(message_queue.empty() && stop.stop_requested()){
-          lock_uni.unlock();
-          return;  
+        if (message_queue.empty() && stop.stop_requested()) {
+          // если очередь пуста и пришел сигнал stop-> то выходим из цикла
+          return;
+
         }
 
+        // меняем очереди 
+        // это надо, чтобы не держать мьютекс во время печати сообщений
         std::swap(local_queue, message_queue);
-        lock_uni.unlock();
+      }
 
-        while(!local_queue.empty()){
-          Message msg_temp = local_queue.front();
-          local_queue.pop();
+        // выводим каждое сообщение из локальной очереди
+      while (!local_queue.empty()) {
+        Message msg_temp = local_queue.front();
+        local_queue.pop();
 
-            std::string_view view{msg_temp.data.data(), msg_temp.size};
-            print(view);
-        }
+        std::string_view view{ msg_temp.data.data(), msg_temp.size };
+        print(view);
+      }
     }
-   // std::string_view view{msg_temp.data.data(), msg_temp.size};
-   // print(view);  
-   lock_uni.unlock();
   }
 
   
